@@ -1,6 +1,19 @@
 class ProductsController < ApplicationController
   def index
-    @products = Product.all
+    @products = if params[:search]
+      Product.where("LOWER(name) LIKE LOWER(?)", "%#{params[:search]}")
+      # This is a query into the database
+    else
+      Product.all
+    end
+
+    @products = @products.order('products.created_at DESC').page(params[:page])
+
+    respond_to do |format|
+      format.html
+      format.js
+    end
+
   end
 
   def show
@@ -8,8 +21,9 @@ class ProductsController < ApplicationController
 
     if current_user
       @review = @product.reviews.build
+      # @review = Review.new
     end
-    
+
   end
 
   def new

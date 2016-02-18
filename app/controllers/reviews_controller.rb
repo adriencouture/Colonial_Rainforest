@@ -1,8 +1,8 @@
 class ReviewsController < ApplicationController
 
-  before_action :ensure_logged_in, only: [:create, :destroy]
-
   before_action :load_product
+
+  before_action :ensure_logged_in, only: [:create, :destroy]
 
     def show
       @review = Review.find(params[:id])
@@ -20,11 +20,14 @@ class ReviewsController < ApplicationController
       #   product_id: @product.id,
       #   user_id: current_user.id
       # )
-
-      if @review.save
-        redirect_to products_path, notice: 'Review created successfully'
-      else
-        render 'products/show'
+      respond_to do |format|
+        if @review.save
+          format.html { redirect_to products_path, notice: 'Review created successfully.' }
+          format.js {} # This will look for app/views/reviews/create.js.erb
+        else
+          format.html { render 'products/show', alert: 'There was an error.' }
+          format.js {} # This will look for app/views/reviews/create.js.erb
+        end
       end
     end
 
@@ -41,6 +44,5 @@ class ReviewsController < ApplicationController
     def load_product
       @product = Product.find(params[:product_id])
     end
-  end
 
 end

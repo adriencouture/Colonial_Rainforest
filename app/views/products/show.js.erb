@@ -1,0 +1,28 @@
+// $('body').append("<%= escape_javascript(render @product) %>");
+
+/*
+We render a partial, here assuming there is a _product.html.erb partial, and pass
+all that to an escape_javascript method to make sure that the quotation marks and
+such are escaped properly. Then put all that escaped HTML into a string, and append
+it to the <body>.
+
+1. In your view template, you set :remote => true on a Rails form_for view helper
+
+2. This renders HTML where the <form> element has a data-remote="true" attribute
+
+3. The rails.js file, which is included in the page, finds the form with the attribute and sets it to submit via ajax and ask for a JavaScript response
+
+4. Someone fills out and submits the form.
+
+5. The web page does not refresh, instead it is submitted by ajax using the JavaScript in rails.js
+
+6. Your router receives the response and runs the correct action (method) in your controller, putting the form information into the params hash.
+
+7. The code in your controller does whatever it does, e.g. fetch data, save new data, etc.
+
+8. In this case, your controller doesn't have any render or redirect calls in it, so it automatically renders the view file for the requested format, which would be whichever.js.erb
+
+9. Your view file, renders whatever HTML it needs to, encapsulates this in JavaScript, and this file is returned to your web page.
+
+10. Your web page receives the file and executes the JavaScript inside it. In this case, it adds a bunch of HTML to the end of the page.
+*/
