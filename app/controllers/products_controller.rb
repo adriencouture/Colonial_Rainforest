@@ -20,8 +20,8 @@ class ProductsController < ApplicationController
     @product = Product.find(params[:id])
 
     if current_user
-      @review = @product.reviews.build
-      # @review = Review.new
+      # @review = @product.reviews.build
+      @review = Review.new
     end
 
   end
